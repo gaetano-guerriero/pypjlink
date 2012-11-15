@@ -11,6 +11,7 @@ import sys
 import appdirs
 
 from pjlink import Projector
+from pjlink import projector
 from pjlink.cliutils import make_command
 
 def cmd_power(p, state=None):
@@ -18,6 +19,13 @@ def cmd_power(p, state=None):
         print p.get_power()
     else:
         p.set_power(state)
+
+def cmd_input(p, source, number):
+    if source is None:
+        source, number = p.get_input()
+        print source, number
+    else:
+        p.set_input(source, number)
 
 def make_parser():
     parser = argparse.ArgumentParser()
@@ -27,6 +35,10 @@ def make_parser():
 
     power = make_command(sub, 'power', cmd_power)
     power.add_argument('state', nargs='?', choices=('on', 'off'))
+
+    inpt = make_command(sub, 'input', cmd_input)
+    inpt.add_argument('source', nargs='?', choices=projector.SOURCE_TYPES)
+    inpt.add_argument('number', nargs='?', choices='123456789', default='1')
 
     return parser
 

@@ -27,6 +27,31 @@ def cmd_input(p, source, number):
     else:
         p.set_input(source, number)
 
+def cmd_mute_state(p):
+    video, audio = p.get_mute()
+    print 'video:', 'muted' if video else 'unmuted'
+    print 'audio:', 'muted' if audio else 'unmuted'
+
+def cmd_mute(p, what):
+    if what is None:
+        return cmd_mute_state(p)
+    what = {
+        'video': projector.MUTE_VIDEO,
+        'audio': projector.MUTE_AUDIO,
+        'all': projector.MUTE_VIDEO | projector.MUTE_AUDIO,
+    }[what]
+    p.set_mute(what, True)
+
+def cmd_unmute(p, what):
+    if what is None:
+        return cmd_mute_state(p)
+    what = {
+        'video': projector.MUTE_VIDEO,
+        'audio': projector.MUTE_AUDIO,
+        'all': projector.MUTE_VIDEO | projector.MUTE_AUDIO,
+    }[what]
+    p.set_mute(what, False)
+
 def make_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--projector')
@@ -39,6 +64,12 @@ def make_parser():
     inpt = make_command(sub, 'input', cmd_input)
     inpt.add_argument('source', nargs='?', choices=projector.SOURCE_TYPES)
     inpt.add_argument('number', nargs='?', choices='123456789', default='1')
+
+    mute = make_command(sub, 'mute', cmd_mute)
+    mute.add_argument('what', nargs='?', choices=('video', 'audio', 'all'))
+
+    unmute = make_command(sub, 'unmute', cmd_unmute)
+    unmute.add_argument('what', nargs='?', choices=('video', 'audio', 'all'))
 
     return parser
 

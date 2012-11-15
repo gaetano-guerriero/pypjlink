@@ -127,7 +127,7 @@ class Projector(object):
     # A/V mute
 
     def get_mute(self):
-        param = self.get('MUTE')
+        param = self.get('AVMT')
         return MUTE_STATES_REV[param]
 
     def set_mute(self, what, state):
@@ -135,7 +135,7 @@ class Projector(object):
         what = str(what)
         assert what in '123'
         state = '1' if state else '0'
-        self.set('MUTE', what + state)
+        self.set('AVMT', what + state)
 
     # Errors
 

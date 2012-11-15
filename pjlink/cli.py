@@ -15,8 +15,9 @@ from pjlink.cliutils import make_command
 
 def cmd_power(p, state=None):
     if state is None:
-        return p.get_power()
-    p.set_power(state)
+        print p.get_power()
+    else:
+        p.set_power(state)
 
 def make_parser():
     parser = argparse.ArgumentParser()
@@ -25,10 +26,13 @@ def make_parser():
     sub = parser.add_subparsers(title='command')
 
     power = make_command(sub, 'power', cmd_power)
+    power.add_argument('state', nargs='?', choices=('on', 'off'))
 
     return parser
 
 def resolve_projector(projector):
+    password = None
+
     # host:port
     if projector is not None and ':' in projector:
         host, port = projector.rsplit(':', 1)
@@ -40,7 +44,7 @@ def resolve_projector(projector):
         conf_file = path.join(appdir, 'pjlink.conf')
 
         try:
-            config = ConfigParser({'port': '4352'})
+            config = ConfigParser({'port': '4352', 'password': ''})
             with open(conf_file, 'r') as f:
                 config.readfp(f)
 
@@ -50,6 +54,7 @@ def resolve_projector(projector):
 
             host = config.get(section, 'host')
             port = config.getint(section, 'port')
+            password = config.get(section, 'password') or None
 
         except (NoSectionError, IOError):
             if projector is None:
@@ -60,7 +65,7 @@ def resolve_projector(projector):
             host = projector
             port = 4352
 
-    return host, port
+    return host, port, password
 
 def main():
     parser = make_parser()
@@ -70,14 +75,19 @@ def main():
     func = kwargs.pop('__func__')
 
     projector = kwargs.pop('projector')
-    host, port = resolve_projector(projector)
+    host, port, password = resolve_projector(projector)
 
     sock = socket()
     sock.connect((host, port))
     f = sock.makefile()
 
+    if password:
+        get_password = lambda: password
+    else:
+        get_password = getpass
+
     proj = Projector(f)
-    rv = proj.authenticate(getpass)
+    rv = proj.authenticate(get_password)
     if rv is False:
         print>>sys.stderr, 'Incorrect password.'
         return

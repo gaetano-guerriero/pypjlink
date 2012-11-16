@@ -27,6 +27,10 @@ def cmd_input(p, source, number):
     else:
         p.set_input(source, number)
 
+def cmd_inputs(p):
+    for source, number in p.get_inputs():
+        print '%s-%s' % (source, number)
+
 def cmd_mute_state(p):
     video, audio = p.get_mute()
     print 'video:', 'muted' if video else 'unmuted'
@@ -52,6 +56,28 @@ def cmd_unmute(p, what):
     }[what]
     p.set_mute(what, False)
 
+def cmd_info(p):
+    info = [
+        ('Name', p.get_name().encode('utf-8')),
+        ('Manufacturer', p.get_manufacturer()),
+        ('Product Name', p.get_product_name()),
+        ('Other Info', p.get_other_info())
+    ]
+    for key, value in info:
+        print '%s: %s' % (key, value)
+
+def cmd_lamps(p):
+    for i, (time, state) in enumerate(p.get_lamps(), 1):
+        print 'Lamp %d: %s (%d hours)' % (
+            i,
+            'on' if state else 'off',
+            time,
+        )
+
+def cmd_errors(p):
+    for what, state in p.get_errors().items():
+        print '%s: %s' % (what, state)
+
 def make_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', '--projector')
@@ -65,11 +91,17 @@ def make_parser():
     inpt.add_argument('source', nargs='?', choices=projector.SOURCE_TYPES)
     inpt.add_argument('number', nargs='?', choices='123456789', default='1')
 
+    make_command(sub, 'inputs', cmd_inputs)
+
     mute = make_command(sub, 'mute', cmd_mute)
     mute.add_argument('what', nargs='?', choices=('video', 'audio', 'all'))
 
     unmute = make_command(sub, 'unmute', cmd_unmute)
     unmute.add_argument('what', nargs='?', choices=('video', 'audio', 'all'))
+
+    make_command(sub, 'info', cmd_info)
+    make_command(sub, 'lamps', cmd_lamps)
+    make_command(sub, 'errors', cmd_errors)
 
     return parser
 

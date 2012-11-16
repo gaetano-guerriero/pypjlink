@@ -47,11 +47,12 @@ class Projector(object):
         # I'm just implementing the authentication scheme designed in the
         # protocol. Don't take this as any kind of assurance that it's secure.
 
-        data = self.f.read(18)
+        data = self.f.read(9)
         assert data[:7] == 'PJLINK '
         security = data[7]
         if security == '0':
             return None
+        data += self.f.read(9)
         assert security == '1'
         assert data[8] == ' '
         salt = data[9:17]
@@ -177,7 +178,7 @@ class Projector(object):
         inputs = []
         for value in values:
             source, number = value
-            source = SOURCE_TYPES[source]
+            source = SOURCE_TYPES_REV[source]
             assert number in '123456789'
             number = int(number)
             inputs.append((source, number))

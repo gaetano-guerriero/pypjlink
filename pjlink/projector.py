@@ -144,10 +144,7 @@ class Projector(object):
         param = self.get('ERST')
         errors = 'fan lamp temperature cover filter other'.split()
         assert len(param) == len(errors)
-        return {
-            key: ERROR_STATES_REV[value]
-            for key, value in zip(errors, param)
-        }
+        return dict((key, ERROR_STATES_REV[value]) for key, value in zip(errors, param))
 
     # Lamps
 

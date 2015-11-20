@@ -13,7 +13,6 @@ except ImportError:
 
 from getpass import getpass
 from os import path
-from socket import socket
 import sys
 
 import appdirs
@@ -163,16 +162,12 @@ def main():
     projector = kwargs.pop('projector')
     host, port, password = resolve_projector(projector)
 
-    sock = socket()
-    sock.connect((host, port))
-    f = sock.makefile()
-
     if password:
         get_password = lambda: password
     else:
         get_password = getpass
 
-    proj = Projector(f)
+    proj = Projector.from_address(host, port)
     rv = proj.authenticate(get_password)
     if rv is False:
         print_error('Incorrect password.')

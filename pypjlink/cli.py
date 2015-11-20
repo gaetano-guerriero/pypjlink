@@ -158,6 +158,7 @@ def main():
 
     kwargs = dict(args._get_kwargs())
     func = kwargs.pop('__func__')
+    kwargs.pop('command', None)
 
     projector = kwargs.pop('projector')
     host, port, password = resolve_projector(projector)

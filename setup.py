@@ -3,9 +3,9 @@ from setuptools import find_packages, setup
 setup(
     name='pjlink',
     version='1.0',
-    author='Peter Ward',
-    author_email='peteraward@gmail.com',
-    url='http://hg.flowblok.id.au/pjlink',
+    author=('Peter Ward <peteraward@gmail.com>, '
+            'Gaetano Guerriero <gaetano.guerriero@spacespa.it>'),
+    url='https://github.com/gaetano-guerriero/pypjlink',
     description='PJLink is a standard for controlling data projectors.',
     classifiers=[
         'Development Status :: 5 - Production/Stable',

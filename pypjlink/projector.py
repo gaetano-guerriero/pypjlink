@@ -1,4 +1,6 @@
 import hashlib
+import socket
+import sys
 
 from pypjlink import protocol
 
@@ -42,6 +44,19 @@ ERROR_STATES_REV = {
 class Projector(object):
     def __init__(self, f):
         self.f = f
+
+    @classmethod
+    def from_address(cls, address, port=4352):
+        """build a Projector from a ip address"""
+        sock = socket.socket()
+        sock.connect((address, port))
+        # in python 3 I need to specify newline, otherwise read hangs
+        # in "PJLINK 0\r"
+        if sys.version_info.major == 2:
+            f = sock.makefile()
+        else:
+            f = sock.makefile(mode='rw', newline='\r')
+        return cls(f)
 
     def authenticate(self, get_password):
         # I'm just implementing the authentication scheme designed in the

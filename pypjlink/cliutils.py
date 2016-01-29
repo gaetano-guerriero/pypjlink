@@ -1,5 +1,5 @@
 import getpass
-import string
+import sys
 
 def prompt(name, default=None):
     """
@@ -62,7 +62,7 @@ def prompt_bool(name, default=False, yes_choices=None, no_choices=None):
 def prompt_choices(
     name, choices,
     default=None,
-    resolve=string.lower, no_choice=('none',)
+    resolve=lambda s: s.lower(), no_choice=('none',)
 ):
     """
     Grabs user input from command line from set of provided choices.
@@ -97,9 +97,7 @@ def prompt_choices(
 
 def make_command(group, name, function):
     parser = group.add_parser(name, help=function.__doc__)
-    parser.set_defaults(
-        __func__=function,
-    )
+    parser.set_defaults(__func__=function)
     return parser
 
 def make_command_group(parent_group, name):
@@ -107,3 +105,9 @@ def make_command_group(parent_group, name):
     sub = parser.add_subparsers(title='subcommands')
     return sub
 
+
+def print_error(error):
+    if sys.version_info.major == 2:
+        print >> sys.stderr, error
+    else:
+        sys.stderr.write(error + '\n')

@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 setup(
-    name='pjlink',
+    name='pypjlink',
     version='1.0',
     author=('Peter Ward <peteraward@gmail.com>, '
             'Gaetano Guerriero <gaetano.guerriero@spacespa.it>'),
@@ -20,7 +20,7 @@ setup(
     packages=find_packages(),
     entry_points = {
         'console_scripts': [
-            'pjlink = pjlink.cli:main',
+            'pjlink = pypjlink.cli:main',
         ],
     }
 )

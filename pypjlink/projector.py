@@ -1,6 +1,6 @@
 import hashlib
 
-from pjlink import protocol
+from pypjlink import protocol
 
 class ProjectorError(Exception):
     pass

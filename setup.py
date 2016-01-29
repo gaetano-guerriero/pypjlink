@@ -1,8 +1,10 @@
 from setuptools import find_packages, setup
 
+from pypjlink import version
+
 setup(
     name='pypjlink',
-    version='1.0',
+    version=version,
     author=('Peter Ward <peteraward@gmail.com>, '
             'Gaetano Guerriero <gaetano.guerriero@spacespa.it>'),
     url='https://github.com/gaetano-guerriero/pypjlink',

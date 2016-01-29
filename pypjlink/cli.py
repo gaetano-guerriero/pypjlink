@@ -10,9 +10,9 @@ import sys
 
 import appdirs
 
-from pjlink import Projector
-from pjlink import projector
-from pjlink.cliutils import make_command
+from pypjlink import Projector
+from pypjlink import projector
+from pypjlink.cliutils import make_command
 
 def cmd_power(p, state=None):
     if state is None:

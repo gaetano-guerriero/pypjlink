@@ -2,3 +2,10 @@ pypjlink is a python library and command utility to interoperate with
 projector through pjlink protocol (http://pjlink.jbmia.or.jp/english/)
 
 It is a fork of the work of Peter Ward (https://bitbucket.org/flowblok/pjlink).
+
+
+Supported python versions:
+
+* python2.7
+* python3.4
+* python3.5

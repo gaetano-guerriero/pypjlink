@@ -5,15 +5,14 @@ from __future__ import unicode_literals
 import hashlib
 import unittest
 
-from pypjlink.projector import Projector
+from pypjlink.projector import Projector, POWER_STATES
 from .utils import MockProjSocket
-
 
 
 NO_AUTH_RESPONSE = 'PJLINK 0\r'
 
-class AuthenticationTC(unittest.TestCase):
 
+class AuthenticationTC(unittest.TestCase):
     def test_no_auth(self):
         """test detection of no auth projector"""
         power_response = '%1POWR=1\r'
@@ -57,17 +56,31 @@ class AuthenticationTC(unittest.TestCase):
 
 
 class NameTC(unittest.TestCase):
-
     def test_unicode(self):
         """test utf-8 chars in projector name"""
-
-        response = (
-            NO_AUTH_RESPONSE +
-            '%1NAME=à€\r'
-        )
-
+        response = NO_AUTH_RESPONSE + '%1NAME=à€\r'
         with MockProjSocket(response) as mock_stream:
              proj = Projector.from_address('projhost')
              proj.authenticate(lambda: '')
              name = proj.get_name()
              self.assertEqual(name, 'à€')
+
+
+class PowerTC(unittest.TestCase):
+    def test_get(self):
+        response = NO_AUTH_RESPONSE + '%1POWR={}\r'.format(
+            POWER_STATES['cooling'])
+        with MockProjSocket(response) as mock_stream:
+            proj = Projector.from_address('projhost')
+            proj.authenticate(lambda: '')
+            self.assertEqual(proj.get_power(), 'cooling')
+
+    def test_get(self):
+        response = NO_AUTH_RESPONSE + '%1POWR=OK\r'
+        with MockProjSocket(response) as mock_stream:
+            proj = Projector.from_address('projhost')
+            proj.authenticate(lambda: '')
+            proj.set_power('off')
+
+            self.assertEqual(
+                mock_stream.written, '%1POWR {}\r'.format(POWER_STATES['off']))

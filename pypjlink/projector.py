@@ -77,9 +77,11 @@ class Projector(object):
         # so we just get the power state.
 
         password = get_password()
-        pass_data = hashlib.md5(salt + password).hexdigest()
+        pass_data = (salt + password).encode('utf-8')
+        pass_data_md5 = hashlib.md5(pass_data).hexdigest()
+
         cmd_data = protocol.to_binary('POWR', '?')
-        self.f.write(pass_data + cmd_data)
+        self.f.write(pass_data_md5 + cmd_data)
         self.f.flush()
 
         # read the response, see if it's a failed auth

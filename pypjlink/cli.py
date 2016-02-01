@@ -65,7 +65,7 @@ def cmd_unmute(p, what):
 
 def cmd_info(p):
     info = [
-        ('Name', p.get_name().encode('utf-8')),
+        ('Name', p.get_name()),
         ('Manufacturer', p.get_manufacturer()),
         ('Product Name', p.get_product_name()),
         ('Other Info', p.get_other_info())

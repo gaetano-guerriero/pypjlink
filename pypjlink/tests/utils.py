@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import functools
+
+from io import StringIO, BytesIO
 
 try:
     from unittest import mock
 except ImportError:
     import mock
-
-try:
-    from io import StringIO
-except ImportError:
-    from cStringIO import StringIO
 
 
 
@@ -31,7 +27,12 @@ class MockProjSocket(object):
         mock_socket_func = mock.patch(self.mock_target).__enter__()
         self._mock_sock = mock_socket_func.return_value
         stream = self._mock_sock.makefile.return_value
-        buf = StringIO(self._response)
+        import sys
+        if sys.version_info.major == 2:
+            buf = BytesIO(self._response.encode('utf-8'))
+        else:
+            buf = StringIO(self._response)
+
         stream.read = buf.read
         stream.written = ''
 

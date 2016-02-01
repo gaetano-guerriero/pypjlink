@@ -1,10 +1,18 @@
+# -*- coding: utf-8 -*-
+
+import sys
+
+
 def read_until(f, term):
     data = []
     c = f.read(1)
     while c != term:
         data.append(c)
         c = f.read(1)
-    return ''.join(data)
+    data = ''.join(data)
+    if sys.version_info.major == 2:
+        data = data.decode('utf-8')
+    return data
 
 def to_binary(body, param, sep=' '):
     assert body.isupper()
@@ -16,7 +24,7 @@ def to_binary(body, param, sep=' '):
 
 def parse_response(f, data=''):
     if len(data) < 7:
-        data += f.read(2 + 4 + 1 - len(data))
+        data += read(f, 2 + 4 + 1 - len(data))
 
     header = data[0]
     assert header == '%'
@@ -38,6 +46,16 @@ def parse_response(f, data=''):
 
     return (body, param)
 
+# python 3 socket makefile is already unicode in text mode, i do the same on
+# python 2
+if sys.version_info.major == 2:
+    def read(f, n):
+        return f.read(n).decode('utf-8')
+else:
+    def read(f, n):
+        return f.read(n)
+
+
 ERRORS = {
     'ERR1': 'undefined command',
     'ERR2': 'out of parameter',
@@ -56,4 +74,3 @@ def send_command(f, req_body, req_param):
     if resp_param in ERRORS:
         return False, ERRORS[resp_param]
     return True, resp_param
-

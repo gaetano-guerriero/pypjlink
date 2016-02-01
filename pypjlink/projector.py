@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import unicode_literals
+
 import hashlib
 import socket
 import sys
@@ -52,6 +56,8 @@ class Projector(object):
         sock.connect((address, port))
         # in python 3 I need to specify newline, otherwise read hangs
         # in "PJLINK 0\r"
+        # I expect socket file to return byte strings in python 2 and
+        # unicode strings in python 3
         if sys.version_info.major == 2:
             f = sock.makefile()
         else:
@@ -62,12 +68,12 @@ class Projector(object):
         # I'm just implementing the authentication scheme designed in the
         # protocol. Don't take this as any kind of assurance that it's secure.
 
-        data = self.f.read(9)
+        data = protocol.read(self.f, 9)
         assert data[:7] == 'PJLINK '
         security = data[7]
         if security == '0':
             return None
-        data += self.f.read(9)
+        data += protocol.read(self.f, 9)
         assert security == '1'
         assert data[8] == ' '
         salt = data[9:17]
@@ -85,10 +91,10 @@ class Projector(object):
         self.f.flush()
 
         # read the response, see if it's a failed auth
-        data = self.f.read(7)
+        data = protocol.read(self.f, 7)
         if data == 'PJLINK ':
             # should be a failed auth if we get that
-            data += self.f.read(5)
+            data += protocol.read(self.f, 5)
             assert data == 'PJLINK ERRA\r'
             # it definitely is
             return False
@@ -204,7 +210,7 @@ class Projector(object):
     def get_name(self):
         param = self.get('NAME')
         assert len(param) <= 64
-        return param.decode('utf-8')
+        return param
 
     def get_manufacturer(self):
         param = self.get('INF1')

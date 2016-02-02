@@ -16,7 +16,7 @@ setup(
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
-        'License :: OSI Approved :: Apache v2',
+        'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Topic :: Multimedia :: Video :: Display',
         'Topic :: Utilities',

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-version = '1.1.DEV'
+version = '1.1'
 
 from pypjlink.projector import (
     Projector,

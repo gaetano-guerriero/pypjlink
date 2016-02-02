@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from setuptools import find_packages, setup
 
 from pypjlink import version
@@ -7,6 +10,7 @@ setup(
     version=version,
     author=('Peter Ward <peteraward@gmail.com>, '
             'Gaetano Guerriero <gaetano.guerriero@spacespa.it>'),
+    author_email='gaetano.guerriero@spacespa.it',
     url='https://github.com/gaetano-guerriero/pypjlink',
     description='PJLink is a standard for controlling data projectors.',
     classifiers=[

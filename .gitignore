@@ -2,3 +2,4 @@
 __pycache__
 pypjlink.egg-info/
 /.tox/
+/dist/

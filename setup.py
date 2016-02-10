@@ -24,9 +24,10 @@ setup(
 
     install_requires=['appdirs'],
     packages=find_packages(),
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'pjlink = pypjlink.cli:main',
         ],
-    }
+    },
+    test_suite='pypjlink.tests',
 )

@@ -75,7 +75,7 @@ class PowerTC(unittest.TestCase):
             proj.authenticate(lambda: '')
             self.assertEqual(proj.get_power(), 'cooling')
 
-    def test_get(self):
+    def test_set(self):
         response = NO_AUTH_RESPONSE + '%1POWR=OK\r'
         with MockProjSocket(response) as mock_stream:
             proj = Projector.from_address('projhost')

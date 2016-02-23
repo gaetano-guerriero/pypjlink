@@ -1,0 +1,103 @@
+.TH PJLINK 1 "February 2016" "pjlink" "User Commands"
+.SH NAME
+pjlink \- communicate with projectors through pjlink protocol
+
+.SH SYNOPSIS
+.B pjlink
+\-h
+.br
+.B pjlink
+[\-p PROJECTOR] COMMAND [COMMAND_ARG [COMMAND_ARG ...]]
+
+.SH DESCRIPTION
+Pjlink is a tool to interoperate with data projectors through the industry
+standard pjlink protocol.
+
+
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show help message and exit
+
+.TP
+\fB\-p\fR PROJECTOR, \fB\-\-projector\fR=PROJECTOR
+Hostname and port where the projector is listening.
+.br
+Must be in the form HOST[:PORT]. If PORT is omitted it defaults to 4352.
+
+.SS Commands
+
+.TP
+\fBpower\fR [ on | off ]
+Without argument, get projector power status.
+.br
+With argument, set projector power accordingly.
+
+
+.TP
+\fBinput\fR [ SOURCE_TYPE INPUT_NUMBER ]
+.br
+With no arguments, query projector about active input source.
+.br
+With arguments, set active input source to number INPUT_NUMBER of type
+SOURCE_TYPE.
+.br
+SOURCE_TYPE muse be one of: VIDEO, DIGITAL, NETWORK, RGB, STORAGE.
+
+
+.TP
+\fBinputs\fR
+.br
+Query projector about available input sources.
+
+
+.TP
+\fBinfo\fR
+.br
+Query projector for general info.
+
+.TP
+\fBlamps\fR
+.br
+Query projector about lamps lighting hour.
+
+.TP
+\fBerrors\fR
+.br
+Query projector about detected errors.
+
+
+.TP
+\fBmute\fR [ video | audio | all]
+.br
+Without arguments, get project audio and video mute status.
+With argument, mute video and/or audio.
+
+.TP
+\fBunmute\fR [ video | audio | all]
+.br
+Without arguments, get project audio and video mute status.
+With argument, unmute video and/or audio.
+
+
+
+.SH "SEE ALSO"
+Pjlink protocol:
+.br
+http://pjlink.jbmia.or.jp/english/data/5-1_PJLink_eng_20131210.pdf
+
+
+.SH "REPORTING BUGS"
+Bugs tracking is on github:
+.br
+https://github.com/gaetano-guerriero/pypjlink
+
+
+.SH AUTHOR
+Pjlink was originally written by Peter Ward. This version is mantained by
+Gaetano Guerriero.
+
+
+
+
+

@@ -51,6 +51,38 @@ class AuthenticationTC(unittest.TestCase):
                 mock_stream.written,
                 self._md5_auth_code('00112233', 'p') + '%1POWR ?\r')
 
+    def test_string_password(self):
+        """since 1.1.1, password can be a string in authenticate() method"""
+        auth_response = 'PJLINK 1 00112244\r'
+        power_response = '%1POWR=1\r'
+        with MockProjSocket(auth_response + power_response) as mock_stream:
+            proj = Projector.from_address('projhost')
+            self.assertTrue(proj.authenticate('ps'))
+            # test write of authentication
+            self.assertEqual(
+                mock_stream.written,
+                self._md5_auth_code('00112244', 'ps') + '%1POWR ?\r')
+
+    def test_no_password_no_auth(self):
+        """since 1.1.1, password can be omitted from authenticate() method
+        if projector doesn't need a password"""
+        power_response = '%1POWR=1\r'
+        with MockProjSocket(NO_AUTH_RESPONSE + power_response) as mock_stream:
+            proj = Projector.from_address('projhost')
+            self.assertFalse(proj.authenticate())
+            self.assertFalse(mock_stream.write.called)
+
+    def test_no_password_auth_required(self):
+        """if projector needs a password but is missing in authenticate() there
+        should be an error"""
+        auth_response = 'PJLINK 1 00112255\r'
+        power_response = '%1POWR=1\r'
+        with MockProjSocket(auth_response + power_response) as mock_stream:
+            proj = Projector.from_address('projhost')
+            with self.assertRaises(RuntimeError):
+                proj.authenticate()
+            self.assertFalse(mock_stream.write.called)
+
     def _md5_auth_code(self, salt, password):
         return hashlib.md5((salt + password).encode('utf-8')).hexdigest()
 

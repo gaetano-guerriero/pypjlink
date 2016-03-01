@@ -64,7 +64,7 @@ class Projector(object):
             f = sock.makefile(mode='rw', newline='\r')
         return cls(f)
 
-    def authenticate(self, get_password):
+    def authenticate(self, password=None):
         # I'm just implementing the authentication scheme designed in the
         # protocol. Don't take this as any kind of assurance that it's secure.
 
@@ -79,12 +79,17 @@ class Projector(object):
         salt = data[9:17]
         assert data[17] == '\r'
 
-        # we *must* send a command to complete the procedure,
-        # so we just get the power state.
+        if password is None:
+            raise RuntimeError('projector needs a password')
 
-        password = get_password()
+        if callable(password):
+            password = password()
+
         pass_data = (salt + password).encode('utf-8')
         pass_data_md5 = hashlib.md5(pass_data).hexdigest()
+
+        # we *must* send a command to complete the procedure,
+        # so we just get the power state.
 
         cmd_data = protocol.to_binary('POWR', '?')
         self.f.write(pass_data_md5 + cmd_data)

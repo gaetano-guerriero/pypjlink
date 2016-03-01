@@ -162,13 +162,11 @@ def main():
     projector = kwargs.pop('projector')
     host, port, password = resolve_projector(projector)
 
-    if password:
-        get_password = lambda: password
-    else:
-        get_password = getpass
+    if not password:
+        password = getpass
 
     proj = Projector.from_address(host, port)
-    rv = proj.authenticate(get_password)
+    rv = proj.authenticate(password)
     if rv is False:
         print_error('Incorrect password.')
         return
